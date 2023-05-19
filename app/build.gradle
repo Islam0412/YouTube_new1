@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -14,6 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "String", "API_KEY", "\"AIzaSyCDv972OguVFpCzKWuu6JD_sinMhqJbbpg\""
+        buildConfigField "String", "BASE_URL", "\"https://www.googleapis.com/youtube/v3/\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,6 +32,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures{
+        viewBinding true
     }
 }
 
@@ -53,6 +59,7 @@ dependencies {
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation("io.coil-kt:coil:2.2.2")
 
     // Interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
