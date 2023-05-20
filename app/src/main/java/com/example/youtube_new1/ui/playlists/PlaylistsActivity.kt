@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.youtube_new1.core.ext.ConnectionLiveData
 import com.example.youtube_new1.core.ui.BaseActivity
 import com.example.youtube_new1.databinding.ActivityPlaylistsBinding
+import com.example.youtube_new1.remote.model.Item
 import com.example.youtube_new1.remote.model.PlayLists
+import com.example.youtube_new1.remote.model.PlaylistInfo
 import com.example.youtube_new1.ui.detail.DetailActivity
 import com.example.youtube_new1.ui.playlists.adapter.PlaylistsAdapter
 
@@ -41,7 +43,9 @@ class PlaylistsActivity : BaseActivity<ActivityPlaylistsBinding, PlaylistsViewMo
         super.initViewModel()
         viewModel.playlists().observe(this) {
             binding.recyclerView.adapter = adapter
-            adapter.addList(it.items!! as List<PlayLists.Item>)
+            viewModel.playlists().observe(this) {
+                it.data?.let { it1 -> adapter.addList(it1.items) }
+            }
         }
     }
 
@@ -49,10 +53,16 @@ class PlaylistsActivity : BaseActivity<ActivityPlaylistsBinding, PlaylistsViewMo
         return ActivityPlaylistsBinding.inflate(layoutInflater)
     }
 
-    private fun onClick(item: PlayLists.Item) {
+    private fun onClick(item: Item) {
         val intent = Intent(this, DetailActivity::class.java)
-        intent.putExtra(ID, item.id)
-        startActivity(intent)
+        intent.putExtra(
+            DetailActivity.DETAIL_KEY, PlaylistInfo(
+                item.id,
+                item.snippet.title,
+                item.snippet.description,
+                item.contentDetails.itemCount
+            )
+        )
     }
 
     companion object {
